@@ -1,0 +1,20 @@
+<books>
+    <book>
+        <title>The House of the Scorpion</title>
+        <authors>Nancy Farmer</authors>
+        <published_year>2002</published_year>
+        <genre>Science Fiction</genre>
+    </book>
+    <book>
+        <title>The Inheritance of Orquidea Divina</title>
+        <authors>Zoraida Cordova</authors>
+        <published_year>2021</published_year>
+        <genre>Fantasy Fiction</genre>
+    </book>
+    <book>
+        <title>Moby Dick</title>
+        <authors>Herman Melville</authors>
+        <published_year>1851</published_year>
+        <genre>Adventure Fiction</genre>
+    </book>
+</books>
