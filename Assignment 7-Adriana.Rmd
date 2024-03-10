@@ -1,0 +1,129 @@
+---
+title: "Data 607- Week 7 assignment"
+author: "Adriana Medina"
+date: "2024-03-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r eval=FALSE, include=FALSE}
+install.packages("xml2")
+```
+# Introduction
+For this assignment I have prepared three separate files in HTML, XML, and JSON formats, each containing the following information about my favorite books:
+
+ + Title
+ + Author
+ + Published Year
+ + Genre
+
+Each of the files were loaded into Github and then into R.
+<header>Load necessary libraries:</header></b>
+
+```{r}
+library(tidyverse)
+library(jsonlite)
+library(xml2)
+library(rvest)
+```
+
+
+# Load HTML file into a data frame
+```{r}
+htmlurl <- "https://raw.githubusercontent.com/amedina613/Data607-Week-7-Assignment/main/books.html"
+html_data <- read_html(htmlurl)
+
+# The HTML file loaded as class "xml_document"
+class(html_data)
+```
+
+<header>Extract HTML table and convert it to a data frame:</header></b>
+
+```{r}
+html_table <- html_data %>%
+  html_table(fill = TRUE)
+ 
+html_df <- as.data.frame(html_table)
+```
+
+
+# Load XML file into a data frame
+
+```{r}
+xmlurl <- ("https://raw.githubusercontent.com/amedina613/Data607-Week-7-Assignment/main/books.xml")
+
+xml_data <- read_xml(xmlurl)
+#The xml file is loaded as class "xml_document"
+class(xml_data)
+```
+
+<header>Extract the information from the XML:</header></b>
+
+```{r}
+titles <- xml_text(xml_find_all(xml_data, ".//title"))
+authors <- xml_text(xml_find_all(xml_data, ".//authors"))
+published_years <- as.numeric(xml_text(xml_find_all(xml_data, ".//published_year")))
+genres <- xml_text(xml_find_all(xml_data, ".//genre"))
+
+```
+
+<header>Create a data frame for the information:</header></b>
+
+```{r}
+xml_df <- data.frame(
+  title = titles,
+  authors = authors,
+  published_year = published_years,
+  genre = genres
+)
+```
+
+# Load JSON file into a data frame
+
+<header>Read JSON data from URL:</header></b>
+
+```{r}
+json_url <- "https://raw.githubusercontent.com/amedina613/Data607-Week-7-Assignment/main/books.json"
+
+json_data <- fromJSON(json_url)
+#The JSON file is loaded as class data.frame
+class(json_data)
+```
+<header>Convert to data frame:</header></b>
+
+```{r}
+json_df <- as.data.frame(json_data)
+```
+
+<header>View the data frames:</header></b>
+
+```{r}
+print(html_df)
+print(xml_df)
+print(json_df)
+```
+# Conclusion
+There are a couple of differences in the naming of the columns. In the HTML data frame, the published year column is named "Published.Year" while in the other two they're named "published_year." The differences in column names could easily be fixed.
+
+<header>Standardize column names:</header></b>
+```{r}
+names(html_df) <- c("title", "authors", "published_year", "genre")
+names(xml_df) <- c("title", "authors", "published_year", "genre")
+names(json_df) <- c("title", "authors", "published_year", "genre")
+```
+
+Another difference I noticed was the class of the imported data from each file. 
+The HTML File(parsed with rvest):
+
+ + "xml_document"
+ 
+ The XML File(Parsed with xml2):
+ 
+ + "xml_document"
+ 
+ The JSON File (Parsed with jsonlite):
+ 
+ + "data.frame"
